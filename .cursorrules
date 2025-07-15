@@ -1,0 +1,226 @@
+# Next.js Authentication System - Cursor Rules
+
+## Project Overview
+Building a secure Register/Login system for Next.js application with modern authentication patterns.
+
+## Tech Stack Requirements
+- **Framework**: Next.js 14+ (App Router)
+- **Authentication**: NextAuth.js v5 (Auth.js) or custom JWT implementation
+- **Database**: Prisma + PostgreSQL/MySQL or MongoDB
+- **Validation**: Zod for schema validation
+- **Password**: bcryptjs for hashing
+- **UI**: Tailwind CSS + shadcn/ui components
+- **Forms**: React Hook Form + Zod resolver
+- **State**: Zustand or React Context for auth state
+
+## File Structure Standards
+```
+src/
+├── app/
+│   ├── (auth)/
+│   │   ├── login/
+│   │   │   └── page.tsx
+│   │   ├── register/
+│   │   │   └── page.tsx
+│   │   └── layout.tsx
+│   ├── api/
+│   │   └── auth/
+│   │       ├── [...nextauth]/
+│   │       ├── register/
+│   │       └── login/
+│   └── dashboard/
+├── components/
+│   ├── auth/
+│   │   ├── LoginForm.tsx
+│   │   ├── RegisterForm.tsx
+│   │   └── AuthProvider.tsx
+│   └── ui/ (shadcn components)
+├── lib/
+│   ├── auth.ts
+│   ├── db.ts
+│   ├── validations/
+│   │   └── auth.ts
+│   └── utils.ts
+├── hooks/
+│   └── useAuth.ts
+└── types/
+    └── auth.ts
+```
+
+## Authentication Implementation Rules
+
+### 1. Security Best Practices
+- ALWAYS hash passwords with bcryptjs (minimum 12 salt rounds)
+- Use NextAuth.js for session management when possible
+- Implement CSRF protection
+- Use secure, httpOnly cookies for session tokens
+- Validate all inputs on both client and server side
+- Implement rate limiting for auth endpoints
+- Never expose sensitive data in client-side code
+
+### 2. Form Validation Pattern
+```typescript
+// Use Zod schemas for validation
+const loginSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters")
+})
+
+// Always validate on server side
+const result = loginSchema.safeParse(body)
+if (!result.success) {
+  return NextResponse.json({ error: result.error.issues }, { status: 400 })
+}
+```
+
+### 3. API Route Structure
+- Use Next.js 14 App Router API routes
+- Implement proper error handling and status codes
+- Return consistent response formats
+- Use middleware for authentication checks
+- Implement request/response logging
+
+### 4. Database Schema Requirements
+```prisma
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Add fields as needed
+  emailVerified DateTime?
+  image         String?
+}
+```
+
+### 5. Component Development Rules
+- Use TypeScript for all components
+- Implement proper loading states
+- Handle errors gracefully with user-friendly messages
+- Use React Hook Form for form management
+- Implement proper accessibility (ARIA labels, focus management)
+- Use shadcn/ui components for consistency
+
+### 6. State Management
+- Use NextAuth.js useSession hook for auth state
+- Implement custom useAuth hook for auth actions
+- Use Zustand for complex client-side auth state if needed
+- Persist auth state appropriately
+
+## Code Style Guidelines
+
+### TypeScript Requirements
+- Enable strict mode
+- Use proper type definitions for all auth-related data
+- Create custom types for User, Session, AuthError
+- Use generic types for API responses
+
+### Error Handling Pattern
+```typescript
+// Client-side error handling
+const [error, setError] = useState<string | null>(null)
+
+try {
+  const result = await signIn('credentials', {...})
+  if (result?.error) {
+    setError('Invalid credentials')
+  }
+} catch (err) {
+  setError('Something went wrong')
+}
+
+// Server-side error handling
+try {
+  // auth logic
+} catch (error) {
+  console.error('Auth error:', error)
+  return NextResponse.json(
+    { error: 'Authentication failed' },
+    { status: 401 }
+  )
+}
+```
+
+### Environment Variables
+```env
+# Required environment variables
+NEXTAUTH_SECRET=your-secret-key
+NEXTAUTH_URL=http://localhost:3000
+DATABASE_URL=your-database-url
+
+# Optional providers
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GITHUB_ID=
+GITHUB_SECRET=
+```
+
+## Security Checklist
+- [ ] Password hashing implemented
+- [ ] Input validation on client and server
+- [ ] CSRF protection enabled
+- [ ] Rate limiting implemented
+- [ ] Secure cookie configuration
+- [ ] Environment variables secured
+- [ ] Error messages don't leak sensitive info
+- [ ] Session timeout implemented
+- [ ] Email verification (if required)
+- [ ] Password reset functionality
+
+## Testing Requirements
+- Write unit tests for validation schemas
+- Test API routes with different scenarios
+- Test form submissions and error states
+- Test authentication flow end-to-end
+- Test security vulnerabilities (SQL injection, XSS)
+
+## Performance Considerations
+- Use React.memo for auth components
+- Implement proper loading states
+- Minimize auth-related API calls
+- Use SWR or React Query for auth state caching
+- Optimize bundle size by code splitting
+
+## Accessibility Requirements
+- Proper ARIA labels on form elements
+- Keyboard navigation support
+- Screen reader compatibility
+- Focus management for form errors
+- Color contrast compliance
+
+## Development Workflow
+1. Set up database schema first
+2. Implement validation schemas
+3. Create API routes with proper error handling
+4. Build UI components with TypeScript
+5. Implement auth state management
+6. Add security measures and rate limiting
+7. Test thoroughly before deployment
+8. Set up monitoring and logging
+
+## Common Patterns to Follow
+- Use custom hooks for auth operations
+- Implement proper redirect logic after auth
+- Use middleware for route protection
+- Implement proper logout functionality
+- Handle token refresh automatically
+- Use proper loading and error states
+
+## Anti-patterns to Avoid
+- Don't store passwords in plain text
+- Don't expose sensitive data in client code
+- Don't trust client-side validation only
+- Don't use weak session management
+- Don't implement auth without HTTPS in production
+- Don't ignore rate limiting
+- Don't use predictable session tokens
+
+## Documentation Requirements
+- Document all auth-related API endpoints
+- Create README with setup instructions
+- Document environment variables
+- Add inline comments for complex auth logic
+- Create user guides for auth flows

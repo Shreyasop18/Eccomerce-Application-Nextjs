@@ -1,0 +1,127 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  email         String    @unique
+  password      String
+  emailVerified Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  tempCarts     TempCart[]
+  orders        Order[]   // Add relation to orders
+
+  @@map("users")
+}
+
+model VerificationToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  email     String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@map("verification_tokens")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  email     String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@map("password_reset_tokens")
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[] // Relation to Product model
+
+  @@map("categories")
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  description String   @db.Text
+  price       Decimal  @db.Decimal(10, 2)
+  imageUrl    String?  // Optional image URL field
+  categoryId  String   // Foreign key to Category
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  tempCarts   TempCart[]
+  orderItems  OrderItem[] // Add relation to order items
+
+  @@index([categoryId])
+  @@map("products")
+}
+
+modelTempCart  {
+  id          String   @id @default(uuid())
+  userId      String   // Foreign key to User
+  productId   String   // Foreign key to Product
+  quantity    Int      @default(1)
+  price       Decimal  @db.Decimal(10, 2)
+  itemTotal   Decimal  @db.Decimal(10, 2)
+  cartNumber  String   @db.VarChar(50)
+  cartDate    DateTime @default(now())
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([productId])
+  @@map("temp_carts")
+}
+
+model Order {
+  id              String      @id @default(uuid())
+  userId          String      // Foreign key to User
+  status          String      // Order status: RECEIVED, COMPLETED, FAILED
+  shippingAddress Json
+  total           Decimal     @db.Decimal(10, 2)
+  paymentIntentId String?     // Stripe payment intent ID
+  paymentStatus   String?     // Payment status from Stripe: pending, succeeded, failed
+  orderItems      OrderItem[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@unique([paymentIntentId])
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String   // Foreign key to Order
+  productId String   // Foreign key to Product
+  quantity  Int
+  price     Decimal  @db.Decimal(10, 2)
+  itemTotal Decimal  @db.Decimal(10, 2)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}

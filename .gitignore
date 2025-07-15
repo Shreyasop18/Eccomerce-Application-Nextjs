@@ -39,3 +39,21 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/lib/generated/prisma
+
+# Windows-specific directories that cause permission errors
+**/Application Data/
+**/Local Settings/
+**/AppData/
+**/Cookies/
+**/History/
+**/Local Storage/
+**/Web Data/
+**/Cache/
+**/Temp/
+**/tmp/
+**/System Volume Information/
+**/$Recycle.Bin/
+**/Thumbs.db
+**/desktop.ini
