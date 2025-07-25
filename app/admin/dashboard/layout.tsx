@@ -72,13 +72,13 @@ export default function DashboardLayout({
             
             {/* Header */}
             <header className="fixed top-0 left-0 right-0 h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 z-30">
-                <div className="flex items-center justify-between h-full px-4">
+                <div className="flex items-center justify-between h-full px-2 sm:px-4">
                     <div className="flex items-center">
                         <Button
                             variant="ghost"
                             size="icon"
                             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                            className="mr-4"
+                            className="mr-2 sm:mr-4"
                         >
                             {isSidebarOpen ? (
                                 <X className="h-6 w-6" />
@@ -86,7 +86,7 @@ export default function DashboardLayout({
                                 <Menu className="h-6 w-6" />
                             )}
                         </Button>
-                        <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                        <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                             Admin Dashboard
                         </h1>
                     </div>
@@ -102,36 +102,55 @@ export default function DashboardLayout({
                 </div>
             </header>
 
+            {/* Sidebar Overlay for Mobile */}
+            {isSidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-30 z-30 sm:hidden"
+                    onClick={() => setIsSidebarOpen(false)}
+                />
+            )}
+
             {/* Sidebar */}
-            <aside className={cn(
-                "fixed left-0 top-16 bottom-0 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-20",
-                !isSidebarOpen && "hidden"
-            )}>
-                <nav className="p-4 space-y-2">
-                    {navItems.map((item) => (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            prefetch={true}
-                            onClick={handleNavigation}
-                            className={cn(
-                                "flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700",
-                                pathname === item.href && "bg-gray-100 dark:bg-gray-700 text-blue-600 dark:text-blue-400"
-                            )}
-                        >
-                            {item.icon}
-                            <span>{item.title}</span>
-                        </Link>
-                    ))}
-                </nav>
+            <aside
+                className={cn(
+                    "fixed top-0 left-0 bottom-0 w-4/5 max-w-xs sm:w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-40 transition-transform duration-200 ease-in-out",
+                    isSidebarOpen ? "translate-x-0" : "-translate-x-full",
+                    "sm:translate-x-0 sm:top-16 sm:z-20 sm:block"
+                )}
+                style={{ height: '100vh' }}
+            >
+                <div className="pt-16 sm:pt-0 h-full flex flex-col">
+                    <nav className="p-4 space-y-2 flex-1">
+                        {navItems.map((item) => (
+                            <Link
+                                key={item.href}
+                                href={item.href}
+                                prefetch={true}
+                                onClick={() => {
+                                    handleNavigation();
+                                    if (window.innerWidth < 640) setIsSidebarOpen(false);
+                                }}
+                                className={cn(
+                                    "flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-base sm:text-sm",
+                                    pathname === item.href && "bg-gray-100 dark:bg-gray-700 text-blue-600 dark:text-blue-400"
+                                )}
+                            >
+                                {item.icon}
+                                <span>{item.title}</span>
+                            </Link>
+                        ))}
+                    </nav>
+                </div>
             </aside>
 
             {/* Main Content */}
-            <main className={cn(
-                "pt-16",
-                isSidebarOpen ? "pl-64" : "pl-0"
-            )}>
-                <div className="p-6">
+            <main
+                className={cn(
+                    "pt-16 transition-all duration-200",
+                    isSidebarOpen ? "sm:pl-64" : "pl-0"
+                )}
+            >
+                <div className="p-2 sm:p-6">
                     {isLoading && (
                         <div className="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-40">
                             <div className="text-gray-600">Loading...</div>

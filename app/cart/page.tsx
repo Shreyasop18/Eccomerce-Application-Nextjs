@@ -155,13 +155,13 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent flex items-center gap-2">
-            <ShoppingCart className="h-7 w-7" /> Your Cart
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-2 sm:p-6">
+      <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
+          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent flex items-center gap-2">
+            <ShoppingCart className="h-6 w-6 sm:h-7 sm:w-7" /> Your Cart
           </h1>
-          <Button variant="outline" onClick={() => router.push('/dashboard')} className="flex items-center gap-2">
+          <Button variant="outline" onClick={() => router.push('/dashboard')} className="flex items-center gap-2 py-2 px-3 text-sm sm:text-base">
             <ArrowLeft className="h-4 w-4" /> Continue Shopping
           </Button>
         </div>
@@ -174,104 +174,108 @@ export default function CartPage() {
             </CardHeader>
           </Card>
         ) : (
-          <>
-            <div className="rounded-lg border bg-card">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[100px]">Product</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Price</TableHead>
-                    <TableHead>Quantity</TableHead>
-                    <TableHead className="text-right">Total</TableHead>
-                    <TableHead className="w-[100px]">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {cartItems.map(item => (
-                    <TableRow key={item.id}>
-                      <TableCell>
-                        <div className="relative h-20 w-20 rounded-md overflow-hidden">
-                          {item.product.imageUrl ? (
-                            <Image 
-                              src={item.product.imageUrl} 
-                              alt={item.product.name} 
-                              fill 
-                              className="object-cover"
-                            />
-                          ) : (
-                            <div className="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-400 text-xs">
-                              No image
-                            </div>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div>
-                          <div className="font-medium">{item.product.name}</div>
-                          <div className="text-sm text-muted-foreground line-clamp-1">
-                            {item.product.description}
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>{formatPrice(Number(item.price))}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() => updateQuantity(item.productId, item.quantity - 1)}
-                            disabled={item.quantity <= 1}
-                          >
-                            <Minus className="h-4 w-4" />
-                          </Button>
-                          <span className="w-12 text-center font-medium">{item.quantity}</span>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() => updateQuantity(item.productId, item.quantity + 1)}
-                          >
-                            <Plus className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right font-medium">
-                        {formatPrice(Number(item.itemTotal))}
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          variant="destructive"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => removeFromCart(item.productId)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </TableCell>
+          <div className="flex flex-col lg:flex-row gap-4">
+            <div className="flex-1 overflow-x-auto rounded-lg border bg-card">
+              <div className="min-w-[600px]">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[80px] sm:w-[100px]">Product</TableHead>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Price</TableHead>
+                      <TableHead>Quantity</TableHead>
+                      <TableHead className="text-right">Total</TableHead>
+                      <TableHead className="w-[60px] sm:w-[100px]">Actions</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {cartItems.map(item => (
+                      <TableRow key={item.id}>
+                        <TableCell>
+                          <div className="relative h-14 w-14 sm:h-20 sm:w-20 rounded-md overflow-hidden">
+                            {item.product.imageUrl ? (
+                              <Image 
+                                src={item.product.imageUrl} 
+                                alt={item.product.name} 
+                                fill 
+                                className="object-cover"
+                              />
+                            ) : (
+                              <div className="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-400 text-xs">
+                                No image
+                              </div>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div>
+                            <div className="font-medium text-sm sm:text-base">{item.product.name}</div>
+                            <div className="text-xs sm:text-sm text-muted-foreground line-clamp-1">
+                              {item.product.description}
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-xs sm:text-base">{formatPrice(Number(item.price))}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-1 sm:gap-2">
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={() => updateQuantity(item.productId, item.quantity - 1)}
+                              disabled={item.quantity <= 1}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <span className="w-8 sm:w-12 text-center font-medium text-sm sm:text-base">{item.quantity}</span>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right font-medium text-xs sm:text-base">
+                          {formatPrice(Number(item.itemTotal))}
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            variant="destructive"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => removeFromCart(item.productId)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             </div>
-            <Card>
-              <CardHeader>
-                <CardTitle>Order Summary</CardTitle>
-                <CardDescription className="text-2xl font-bold text-blue-600">
-                  {formatPrice(total)}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button 
-                  className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
-                  onClick={() => router.push('/checkout')}
-                >
-                  Proceed to Checkout
-                </Button>
-              </CardContent>
-            </Card>
-          </>
+            <div className="w-full max-w-xs lg:max-w-sm mx-auto lg:mx-0">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base sm:text-lg">Order Summary</CardTitle>
+                  <CardDescription className="text-xl sm:text-2xl font-bold text-blue-600">
+                    {formatPrice(total)}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button 
+                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 py-2 text-sm sm:text-base"
+                    onClick={() => router.push('/checkout')}
+                  >
+                    Proceed to Checkout
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         )}
       </div>
     </div>

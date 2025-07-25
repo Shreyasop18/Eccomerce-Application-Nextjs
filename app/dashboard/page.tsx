@@ -272,7 +272,7 @@ export default function DashboardPage() {
             <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4 flex items-center justify-center">
                 <div className="flex flex-col items-center gap-2">
                     <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-                    <p className="text-muted-foreground">Loading products...</p>
+                    <p className="text-muted-foreground text-base md:text-lg">Loading products...</p>
                 </div>
             </div>
         )
@@ -283,14 +283,14 @@ export default function DashboardPage() {
             <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4 flex items-center justify-center">
                 <Card className="max-w-md w-full">
                     <CardHeader>
-                        <CardTitle className="text-red-600">Error</CardTitle>
-                        <CardDescription>{error}</CardDescription>
+                        <CardTitle className="text-red-600 text-lg md:text-xl">Error</CardTitle>
+                        <CardDescription className="text-base md:text-lg">{error}</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <Button 
                             onClick={() => window.location.reload()} 
                             variant="outline"
-                            className="w-full"
+                            className="w-full py-3 text-base"
                         >
                             Try Again
                         </Button>
@@ -303,24 +303,24 @@ export default function DashboardPage() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
             {/* Header with user info and logout */}
-            <div className="bg-white shadow-sm">
-                <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div className="bg-white shadow-sm sticky top-0 z-30">
+                <div className="max-w-7xl mx-auto px-2 sm:px-4 py-3 flex justify-between items-center">
                     {/* Mobile hamburger */}
                     <button
-                        className="md:hidden mr-4 text-gray-700"
+                        className="md:hidden mr-4 text-gray-700 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                         onClick={() => setMobileSidebarOpen(true)}
                         aria-label="Open filters"
                     >
                         <Menu className="h-6 w-6" />
                     </button>
                     <div>
-                        <h1 className="text-xl font-semibold">Welcome, {user?.name}</h1>
-                        <p className="text-sm text-gray-600">{user?.email}</p>
+                        <h1 className="text-lg md:text-xl font-semibold">Welcome, {user?.name}</h1>
+                        <p className="text-xs md:text-sm text-gray-600">{user?.email}</p>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 md:gap-3">
                         <Button
                             variant="outline"
-                            className="relative flex items-center gap-2"
+                            className="relative flex items-center gap-2 px-2 md:px-4 py-2 md:py-2 text-sm md:text-base"
                             onClick={() => router.push('/cart')}
                             aria-label="View cart"
                         >
@@ -334,19 +334,27 @@ export default function DashboardPage() {
                         </Button>
                         <Button
                             variant="outline"
-                            className="flex items-center gap-2"
+                            className="flex items-center gap-2 px-2 md:px-4 py-2 md:py-2 text-sm md:text-base"
+                            onClick={() => router.push('/transactions')}
+                        >
+                            <DollarSign className="h-4 w-4" />
+                            <span className="hidden sm:inline">Transactions</span>
+                        </Button>
+                        <Button
+                            variant="outline"
+                            className="flex items-center gap-2 px-2 md:px-4 py-2 md:py-2 text-sm md:text-base"
                             onClick={() => router.push('/my-orders')}
                         >
                             <Package className="h-4 w-4" />
-                            My Orders
+                            <span className="hidden sm:inline">My Orders</span>
                         </Button>
                         <Button 
                             onClick={handleLogout}
                             variant="outline"
-                            className="flex items-center gap-2"
+                            className="flex items-center gap-2 px-2 md:px-4 py-2 md:py-2 text-sm md:text-base"
                         >
                             <LogOut className="h-4 w-4" />
-                            Logout
+                            <span className="hidden sm:inline">Logout</span>
                         </Button>
                     </div>
                 </div>
@@ -362,9 +370,9 @@ export default function DashboardPage() {
                         aria-label="Close filters"
                     />
                     {/* Sidebar drawer */}
-                    <div className="relative ml-auto w-64 bg-white shadow-lg p-6 space-y-6 overflow-y-auto z-50">
+                    <div className="relative ml-auto w-4/5 max-w-xs bg-white shadow-lg p-4 space-y-6 overflow-y-auto z-50 h-full">
                         <button
-                            className="absolute top-4 right-4 text-gray-700"
+                            className="absolute top-4 right-4 text-gray-700 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                             onClick={() => setMobileSidebarOpen(false)}
                             aria-label="Close filters"
                         >
@@ -373,10 +381,10 @@ export default function DashboardPage() {
                         {/* Sidebar content duplicated */}
                         {/* Price Range Inputs */}
                         <div>
-                            <h2 className="text-lg font-semibold mb-4">Price Range</h2>
-                            <div className="space-y-6">
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="space-y-2">
+                            <h2 className="text-base font-semibold mb-4">Price Range</h2>
+                            <div className="space-y-4">
+                                <div className="grid grid-cols-2 gap-2">
+                                    <div className="space-y-1">
                                         <Label htmlFor="m-min-price">Min Price</Label>
                                         <div className="relative">
                                             <DollarSign className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
@@ -385,12 +393,12 @@ export default function DashboardPage() {
                                                 type="text"
                                                 value={inputPriceRange.min}
                                                 onChange={(e) => handlePriceInputChange('min', e.target.value)}
-                                                className="pl-8"
+                                                className="pl-8 py-2 text-sm"
                                                 placeholder="Min"
                                             />
                                         </div>
                                     </div>
-                                    <div className="space-y-2">
+                                    <div className="space-y-1">
                                         <Label htmlFor="m-max-price">Max Price</Label>
                                         <div className="relative">
                                             <DollarSign className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
@@ -399,15 +407,15 @@ export default function DashboardPage() {
                                                 type="text"
                                                 value={inputPriceRange.max}
                                                 onChange={(e) => handlePriceInputChange('max', e.target.value)}
-                                                className="pl-8"
+                                                className="pl-8 py-2 text-sm"
                                                 placeholder="Max"
                                             />
                                         </div>
                                     </div>
                                 </div>
                                 {/* Active range display */}
-                                <div className="bg-blue-50 p-3 rounded-lg">
-                                    <p className="text-sm text-center text-blue-600">
+                                <div className="bg-blue-50 p-2 rounded-lg">
+                                    <p className="text-xs text-center text-blue-600">
                                         Showing products from {formatPrice(priceRange[0])} to {formatPrice(priceRange[1])}
                                     </p>
                                 </div>
@@ -416,11 +424,11 @@ export default function DashboardPage() {
 
                         {/* Sort Options */}
                         <div>
-                            <h2 className="text-lg font-semibold mb-4">Sort By</h2>
+                            <h2 className="text-base font-semibold mb-4">Sort By</h2>
                             <div className="space-y-2">
                                 <Button 
                                     variant={sortBy === 'price-high' ? 'default' : 'outline'} 
-                                    className="w-full justify-start"
+                                    className="w-full justify-start py-2 text-sm"
                                     onClick={() => setSortBy('price-high')}
                                 >
                                     <ArrowUpDown className="mr-2 h-4 w-4" />
@@ -428,7 +436,7 @@ export default function DashboardPage() {
                                 </Button>
                                 <Button 
                                     variant={sortBy === 'price-low' ? 'default' : 'outline'} 
-                                    className="w-full justify-start"
+                                    className="w-full justify-start py-2 text-sm"
                                     onClick={() => setSortBy('price-low')}
                                 >
                                     <ArrowUpDown className="mr-2 h-4 w-4" />
@@ -436,7 +444,7 @@ export default function DashboardPage() {
                                 </Button>
                                 <Button 
                                     variant={sortBy === 'latest' ? 'default' : 'outline'} 
-                                    className="w-full justify-start"
+                                    className="w-full justify-start py-2 text-sm"
                                     onClick={() => setSortBy('latest')}
                                 >
                                     <Calendar className="mr-2 h-4 w-4" />
@@ -447,11 +455,11 @@ export default function DashboardPage() {
 
                         {/* Categories */}
                         <div>
-                            <h2 className="text-lg font-semibold mb-4">Categories</h2>
+                            <h2 className="text-base font-semibold mb-4">Categories</h2>
                             <div className="space-y-2">
                                 <Button 
                                     variant={selectedCategory === null ? 'default' : 'outline'} 
-                                    className="w-full justify-start"
+                                    className="w-full justify-start py-2 text-sm"
                                     onClick={() => setSelectedCategory(null)}
                                 >
                                     <Tag className="mr-2 h-4 w-4" />
@@ -461,7 +469,7 @@ export default function DashboardPage() {
                                     <Button 
                                         key={category.id}
                                         variant={selectedCategory === category.id ? 'default' : 'outline'} 
-                                        className="w-full justify-start"
+                                        className="w-full justify-start py-2 text-sm"
                                         onClick={() => setSelectedCategory(category.id)}
                                     >
                                         <Tag className="mr-2 h-4 w-4" />
@@ -578,14 +586,14 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Main Content */}
-                <div className="flex-1 p-6">
+                <div className="flex-1 p-2 sm:p-4 md:p-6">
                     <div className="max-w-7xl mx-auto">
                         {/* Header */}
-                        <div className="mb-8">
-                            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                        <div className="mb-6 md:mb-8">
+                            <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                                 Our Products
                             </h1>
-                            <p className="text-gray-600">
+                            <p className="text-gray-600 text-sm md:text-base">
                                 {selectedCategory 
                                     ? `Showing ${categories.find(c => c.id === selectedCategory)?.name} products`
                                     : 'Discover our amazing collection of products.'
@@ -606,19 +614,20 @@ export default function DashboardPage() {
                                 </CardHeader>
                             </Card>
                         ) : (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                                 {filteredProducts.map((product) => (
                                     <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                                        <div className="relative h-48 w-full bg-gray-100">
+                                        <div className="relative h-40 sm:h-48 w-full bg-gray-100">
                                             {product.imageUrl ? (
                                                 <Image
                                                     src={product.imageUrl}
                                                     alt={product.name}
                                                     fill
-                                                    className="object-cover"
+                                                    className="object-cover object-center"
+                                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                                                 />
                                             ) : (
-                                                <div className="absolute inset-0 flex items-center justify-center text-gray-400">
+                                                <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-xs sm:text-base">
                                                     No image available
                                                 </div>
                                             )}
@@ -626,22 +635,22 @@ export default function DashboardPage() {
                                         <CardHeader>
                                             <div className="flex items-center justify-between">
                                                 <div>
-                                                    <CardTitle className="line-clamp-1">{product.name}</CardTitle>
-                                                    <CardDescription className="line-clamp-1">
+                                                    <CardTitle className="line-clamp-1 text-base md:text-lg">{product.name}</CardTitle>
+                                                    <CardDescription className="line-clamp-1 text-xs md:text-sm">
                                                         {product.category.name}
                                                     </CardDescription>
                                                 </div>
-                                                <div className="text-lg font-bold text-blue-600">
+                                                <div className="text-base md:text-lg font-bold text-blue-600">
                                                     {formatPrice(product.price)}
                                                 </div>
                                             </div>
                                         </CardHeader>
                                         <CardContent>
-                                            <p className="text-sm text-gray-600 line-clamp-2 mb-4">
+                                            <p className="text-xs md:text-sm text-gray-600 line-clamp-2 mb-2 md:mb-4">
                                                 {product.description}
                                             </p>
                                             <Button 
-                                                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                                                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 py-2 text-sm md:text-base"
                                                 onClick={() => handleAddToCart(product)}
                                             >
                                                 <ShoppingCart className="mr-2 h-4 w-4" />

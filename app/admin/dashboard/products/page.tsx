@@ -76,15 +76,15 @@ export default function Products() {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
                 <div>
-                    <h2 className="text-3xl font-bold tracking-tight">Products</h2>
-                    <p className="text-gray-600">
+                    <h2 className="text-lg sm:text-3xl font-bold tracking-tight">Products</h2>
+                    <p className="text-gray-600 text-sm sm:text-base">
                         Manage your product listings here.
                     </p>
                 </div>
-                <a href="/admin/dashboard/addproducts">
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                <a href="/admin/dashboard/addproducts" className="w-full sm:w-auto">
+                    <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full sm:w-auto">
                         Add Product
                     </button>
                 </a>
@@ -111,48 +111,74 @@ export default function Products() {
                             </a>
                         </div>
                     ) : (
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left">
-                                <thead className="bg-gray-50">
-                                    <tr>
-                                        <th className="p-3 font-medium">Name</th>
-                                        <th className="p-3 font-medium">Category</th>
-                                        <th className="p-3 font-medium">Price</th>
-                                        <th className="p-3 font-medium">Description</th>
-                                        <th className="p-3 font-medium">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y">
-                                    {products.map((product) => (
-                                        <tr key={product.id} className="hover:bg-gray-50">
-                                            <td className="p-3 font-medium">{product.name}</td>
-                                            <td className="p-3">{product.category.name}</td>
-                                            <td className="p-3">${formatPrice(product.price)}</td>
-                                            <td className="p-3">
-                                                <div className="max-w-xs overflow-hidden text-ellipsis whitespace-nowrap">
-                                                    {product.description}
-                                                </div>
-                                            </td>
-                                            <td className="p-3">
-                                                <div className="flex items-center gap-2">
-                                                    <a href={`/admin/dashboard/products/edit/${product.id}`}>
-                                                        <button className="text-blue-600 hover:text-blue-700 px-2 py-1">
-                                                            Edit
-                                                        </button>
-                                                    </a>
-                                                    <button
-                                                        className="text-red-600 hover:text-red-700 px-2 py-1"
-                                                        onClick={() => handleDelete(product.id)}
-                                                        disabled={deletingId === product.id}
-                                                    >
-                                                        {deletingId === product.id ? "Deleting..." : "Delete"}
-                                                    </button>
-                                                </div>
-                                            </td>
+                        <div>
+                            {/* Mobile Card List */}
+                            <div className="flex flex-col gap-3 sm:hidden">
+                                {products.map((product) => (
+                                    <div key={product.id} className="bg-white rounded-lg border p-3 flex flex-col gap-2 shadow-sm">
+                                        <div className="font-semibold text-base break-all">{product.name}</div>
+                                        <div className="text-gray-500 text-xs">Category: {product.category.name}</div>
+                                        <div className="text-gray-700 text-xs">Price: ${formatPrice(product.price)}</div>
+                                        <div className="text-gray-600 text-xs break-all">{product.description}</div>
+                                        <div className="flex gap-2 mt-1">
+                                            <a href={`/admin/dashboard/products/edit/${product.id}`} className="flex-1">
+                                                <button className="w-full text-blue-600 hover:text-blue-700 px-2 py-2 rounded border border-blue-100 bg-blue-50 text-xs min-h-[36px]">Edit</button>
+                                            </a>
+                                            <button
+                                                className="flex-1 w-full text-red-600 hover:text-red-700 px-2 py-2 rounded border border-red-100 bg-red-50 text-xs min-h-[36px]"
+                                                onClick={() => handleDelete(product.id)}
+                                                disabled={deletingId === product.id}
+                                            >
+                                                {deletingId === product.id ? "Deleting..." : "Delete"}
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            {/* Desktop Table */}
+                            <div className="overflow-x-auto hidden sm:block">
+                                <table className="w-full text-left">
+                                    <thead className="bg-gray-50">
+                                        <tr>
+                                            <th className="p-3 font-medium">Name</th>
+                                            <th className="p-3 font-medium">Category</th>
+                                            <th className="p-3 font-medium">Price</th>
+                                            <th className="p-3 font-medium">Description</th>
+                                            <th className="p-3 font-medium">Actions</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody className="divide-y">
+                                        {products.map((product) => (
+                                            <tr key={product.id} className="hover:bg-gray-50">
+                                                <td className="p-3 font-medium">{product.name}</td>
+                                                <td className="p-3">{product.category.name}</td>
+                                                <td className="p-3">${formatPrice(product.price)}</td>
+                                                <td className="p-3">
+                                                    <div className="max-w-xs overflow-hidden text-ellipsis whitespace-nowrap">
+                                                        {product.description}
+                                                    </div>
+                                                </td>
+                                                <td className="p-3">
+                                                    <div className="flex items-center gap-2">
+                                                        <a href={`/admin/dashboard/products/edit/${product.id}`}>
+                                                            <button className="text-blue-600 hover:text-blue-700 px-2 py-1">
+                                                                Edit
+                                                            </button>
+                                                        </a>
+                                                        <button
+                                                            className="text-red-600 hover:text-red-700 px-2 py-1"
+                                                            onClick={() => handleDelete(product.id)}
+                                                            disabled={deletingId === product.id}
+                                                        >
+                                                            {deletingId === product.id ? "Deleting..." : "Delete"}
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     )}
                 </div>
